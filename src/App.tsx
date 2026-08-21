@@ -66,6 +66,7 @@ const projects: Project[] = [
     challenges: 'Balancing a rich catalog with a low-friction shopping path across smaller screens.',
     learned: 'The best commerce interfaces make the next useful action obvious without removing the sense of exploration.',
     categories: ['Full Stack', 'JavaScript'], stack: ['HTML', 'CSS', 'JavaScript', 'Node.js / Express', 'MySQL'], tone: 'mint', number: '01',
+    repoUrl: 'https://github.com/tariq9012/shopinza-e-commerce-website',
     images: ['/projects/shopinza/1.jpg', '/projects/shopinza/2.jpg', '/projects/shopinza/3.jpg', '/projects/shopinza/4.jpg'],
   },
   {
@@ -78,6 +79,7 @@ const projects: Project[] = [
     challenges: 'Designing for many content states while keeping the main feed visually legible.',
     learned: 'Good social software is less about adding more interactions and more about giving existing ones better rhythm.',
     categories: ['Full Stack', 'JavaScript'], stack: ['HTML', 'CSS', 'JavaScript', 'Node.js / Express', 'MySQL'], tone: 'apricot', number: '02',
+    repoUrl: 'https://github.com/tariq9012/Zovari-social-media-app',
     images: ['/projects/zovari/1.jpg', '/projects/zovari/2.jpg', '/projects/zovari/3.jpg'],
   },
   {
