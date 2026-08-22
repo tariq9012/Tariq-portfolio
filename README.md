@@ -61,14 +61,14 @@ That's it — after deploying, visits, page views, and visitor locations will st
 
 ## AI portfolio assistant (chatbot)
 
-The site includes a floating chat widget (bottom-right corner) that answers visitor questions about Tariq — his skills, projects, and education — using Google's free Gemini API. It runs through a serverless function (`api/chat.js`) so your API key stays private and is never exposed in the browser.
+The site includes a floating chat widget (bottom-right corner) that answers visitor questions about Tariq — his skills, projects, and education — using Groq's free API (fast, OpenAI-compatible, no unusual key format issues). It runs through a serverless function (`api/chat.js`) so your API key stays private and is never exposed in the browser.
 
 **Local setup:**
 
-1. Go to https://aistudio.google.com/apikey and create a free API key (Google account required, no credit card).
+1. Go to https://console.groq.com/keys and create a free API key (Google/GitHub sign-in, no credit card).
 2. Add it to your `.env` file:
    ```
-   GEMINI_API_KEY=your-key-here
+   GROQ_API_KEY=your-key-here
    ```
 3. Since this key is used by a serverless function (not the browser), test it after deploying to Vercel — plain `npm run dev` won't run the `/api` function locally unless you use the Vercel CLI (`npx vercel dev`).
 
@@ -76,8 +76,8 @@ The site includes a floating chat widget (bottom-right corner) that answers visi
 
 1. In your Vercel project, go to **Settings → Environment Variables** (same place you added the Web3Forms key).
 2. Add a new variable:
-   - Key: `GEMINI_API_KEY`
-   - Value: your Gemini API key
+   - Key: `GROQ_API_KEY`
+   - Value: your Groq API key
 3. Redeploy the project so the function picks up the new key.
 
 Once deployed, click the chat bubble on your live site and ask it something like "What are Tariq's skills?" to confirm it's working.

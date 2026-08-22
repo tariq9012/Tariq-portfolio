@@ -1,5 +1,6 @@
-// Vercel serverless function — keeps the Gemini API key on the server only.
-// Requires a GEMINI_API_KEY environment variable set in Vercel project settings.
+// Vercel serverless function — keeps the Groq API key on the server only.
+// Requires a GROQ_API_KEY environment variable set in Vercel project settings.
+// Get a free key at https://console.groq.com/keys
 
 const SYSTEM_CONTEXT = `
 You are the friendly portfolio assistant embedded on Tariq Ahmed's personal developer portfolio website.
@@ -88,35 +89,15 @@ CONTACT
   sent through it go straight to Tariq's email.
 `;
 
-const MODEL_CANDIDATES = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
-
-async function callGemini(model, apiKey, contents) {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify({
-        contents,
-        generationConfig: { temperature: 0.6, maxOutputTokens: 500 },
-      }),
-    },
-  );
-  return response;
-}
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
     return;
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
-    res.status(500).json({ error: 'Server is missing GEMINI_API_KEY.' });
+    res.status(500).json({ error: 'Server is missing GROQ_API_KEY.' });
     return;
   }
 
@@ -127,34 +108,41 @@ export default async function handler(req, res) {
       return;
     }
 
-    const contents = [
-      { role: 'user', parts: [{ text: SYSTEM_CONTEXT }] },
-      { role: 'model', parts: [{ text: "Understood — I'll answer as Tariq, covering everything in that information, and greet visitors warmly." }] },
+    const messages = [
+      { role: 'system', content: SYSTEM_CONTEXT },
       ...(Array.isArray(history) ? history.slice(-10).map((turn) => ({
-        role: turn.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: String(turn.content ?? '') }],
+        role: turn.role === 'assistant' ? 'assistant' : 'user',
+        content: String(turn.content ?? ''),
       })) : []),
-      { role: 'user', parts: [{ text: message }] },
+      { role: 'user', content: message },
     ];
 
-    let lastErrorText = '';
-    for (const model of MODEL_CANDIDATES) {
-      const response = await callGemini(model, apiKey, contents);
-      if (response.ok) {
-        const data = await response.json();
-        const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (reply) {
-          res.status(200).json({ reply });
-          return;
-        }
-        lastErrorText = 'Empty response from model.';
-        continue;
-      }
-      lastErrorText = await response.text();
-      console.error(`Gemini API error (${model}):`, lastErrorText);
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-oss-120b',
+        messages,
+        temperature: 0.6,
+        max_tokens: 500,
+      }),
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error('Groq API error:', errText);
+      res.status(502).json({ error: 'The AI service failed to respond.', detail: errText });
+      return;
     }
 
-    res.status(502).json({ error: 'The AI service failed to respond.', detail: lastErrorText });
+    const data = await response.json();
+    const reply = data?.choices?.[0]?.message?.content
+      ?? "Sorry, I couldn't come up with an answer for that.";
+
+    res.status(200).json({ reply });
   } catch (err) {
     console.error('Chat function error:', err);
     res.status(500).json({ error: 'Something went wrong.' });
