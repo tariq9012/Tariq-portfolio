@@ -7,7 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import { Route, Switch, useLocation, Router as WouterRouter } from 'wouter';
 import {
-  ArrowDownRight, ArrowUpRight, BriefcaseBusiness, Check, ChevronRight,
+  ArrowDownRight, ArrowUpRight, Bot, BriefcaseBusiness, Check, ChevronRight,
   Code2, Database, Download, FileCode2, GraduationCap, Github, Globe2, Layers3, Linkedin, Mail,
   Menu, Monitor, Moon, MoveRight, Send, Server, Sparkles, Sun, Terminal, X,
 } from 'lucide-react';
@@ -66,7 +66,6 @@ const projects: Project[] = [
     challenges: 'Balancing a rich catalog with a low-friction shopping path across smaller screens.',
     learned: 'The best commerce interfaces make the next useful action obvious without removing the sense of exploration.',
     categories: ['Full Stack', 'JavaScript'], stack: ['HTML', 'CSS', 'JavaScript', 'Node.js / Express', 'MySQL'], tone: 'mint', number: '01',
-    repoUrl: 'https://github.com/tariq9012/shopinza-e-commerce-website',
     images: ['/projects/shopinza/1.jpg', '/projects/shopinza/2.jpg', '/projects/shopinza/3.jpg', '/projects/shopinza/4.jpg'],
   },
   {
@@ -79,7 +78,6 @@ const projects: Project[] = [
     challenges: 'Designing for many content states while keeping the main feed visually legible.',
     learned: 'Good social software is less about adding more interactions and more about giving existing ones better rhythm.',
     categories: ['Full Stack', 'JavaScript'], stack: ['HTML', 'CSS', 'JavaScript', 'Node.js / Express', 'MySQL'], tone: 'apricot', number: '02',
-    repoUrl: 'https://github.com/tariq9012/Zovari-social-media-app',
     images: ['/projects/zovari/1.jpg', '/projects/zovari/2.jpg', '/projects/zovari/3.jpg'],
   },
   {
@@ -559,8 +557,92 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
   return <ErrorBoundary resetKey={location}>{children}</ErrorBoundary>;
 }
 
+type ChatMessage = { role: 'user' | 'assistant'; content: string };
+
+function ChatWidget() {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    { role: 'assistant', content: "Hi! I'm Tariq's portfolio assistant. Ask me about his skills, projects, or education." },
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  }, [messages, open, loading]);
+
+  const send = async () => {
+    const text = input.trim();
+    if (!text || loading) return;
+    const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: text }];
+    setMessages(nextMessages);
+    setInput('');
+    setLoading(true);
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history: nextMessages.slice(0, -1) }),
+      });
+      const data = await response.json();
+      const reply = response.ok ? data.reply : "Sorry, I'm having trouble answering right now — please try again in a moment.";
+      setMessages((current) => [...current, { role: 'assistant', content: reply }]);
+    } catch {
+      setMessages((current) => [...current, { role: 'assistant', content: "Sorry, I'm having trouble connecting right now." }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      {open && (
+        <div data-testid="panel-chat-widget" className="fixed bottom-24 right-5 z-50 flex h-[28rem] w-[min(22rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-[hsl(var(--border))] bg-[hsl(var(--card))] shadow-2xl">
+          <div className="flex items-center justify-between border-b border-[hsl(var(--border))] bg-[hsl(var(--primary))] px-4 py-3.5 text-[hsl(var(--primary-foreground))]">
+            <div className="flex items-center gap-2.5"><span className="grid h-8 w-8 place-items-center rounded-full bg-white/10"><Bot size={16} /></span><div><p className="text-sm font-semibold">Ask about Tariq</p><p className="font-mono-ui text-[9px] text-white/50">AI portfolio assistant</p></div></div>
+            <button data-testid="button-close-chat" type="button" onClick={() => setOpen(false)} aria-label="Close chat" className="grid h-8 w-8 place-items-center rounded-full text-white/70 transition-colors hover:bg-white/10 hover:text-white"><X size={16} /></button>
+          </div>
+          <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
+            {messages.map((msg, index) => (
+              <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <p data-testid={`message-${msg.role}-${index}`} className={`max-w-[85%] rounded-xl px-3.5 py-2.5 text-sm leading-6 ${msg.role === 'user' ? 'bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))]' : 'bg-[hsl(var(--secondary))] text-[hsl(var(--foreground))]'}`}>{msg.content}</p>
+              </div>
+            ))}
+            {loading && (
+              <div className="flex justify-start"><p className="rounded-xl bg-[hsl(var(--secondary))] px-3.5 py-2.5 text-sm text-[hsl(var(--muted-foreground))]">Typing…</p></div>
+            )}
+          </div>
+          <div className="flex items-center gap-2 border-t border-[hsl(var(--border))] p-3">
+            <input
+              data-testid="input-chat-message"
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              onKeyDown={(event) => { if (event.key === 'Enter') send(); }}
+              placeholder="Ask a question…"
+              className="flex-1 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background))] px-4 py-2.5 text-sm outline-none focus:border-[hsl(var(--accent))]"
+            />
+            <button data-testid="button-send-chat" type="button" onClick={send} disabled={loading || !input.trim()} aria-label="Send message" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] transition-opacity disabled:opacity-40">
+              <Send size={15} />
+            </button>
+          </div>
+        </div>
+      )}
+      <button
+        data-testid="button-toggle-chat"
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        aria-label={open ? 'Close chat assistant' : 'Open chat assistant'}
+        className="fixed bottom-6 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] shadow-xl transition-transform hover:-translate-y-0.5"
+      >
+        {open ? <X size={20} /> : <Bot size={22} />}
+      </button>
+    </>
+  );
+}
+
 function App() {
-  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><Router /></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><TooltipProvider><WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}><Router /><ChatWidget /></WouterRouter><Toaster /></TooltipProvider></QueryClientProvider>;
 }
 
 export default App;
