@@ -1,7 +1,6 @@
 // Vercel serverless function — keeps the Groq API key on the server only.
 // Requires a GROQ_API_KEY environment variable set in Vercel project settings.
 // Get a free key at https://console.groq.com/keys
-// Written in CommonJS (.cjs) to avoid any ESM/module-type ambiguity on Vercel's Node runtime.
 
 const SYSTEM_CONTEXT = `
 You are the friendly portfolio assistant embedded on Tariq Ahmed's personal developer portfolio website.
@@ -90,7 +89,7 @@ CONTACT
   sent through it go straight to Tariq's email.
 `;
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   try {
     if (req.method !== 'POST') {
       res.status(405).json({ error: 'Method not allowed' });
@@ -103,12 +102,7 @@ module.exports = async (req, res) => {
       return;
     }
 
-    let body = req.body;
-    if (typeof body === 'string') {
-      try { body = JSON.parse(body); } catch { body = {}; }
-    }
-    const { message, history } = body || {};
-
+    const { message, history } = req.body ?? {};
     if (!message || typeof message !== 'string') {
       res.status(400).json({ error: 'A "message" string is required.' });
       return;
@@ -118,7 +112,7 @@ module.exports = async (req, res) => {
       { role: 'system', content: SYSTEM_CONTEXT },
       ...(Array.isArray(history) ? history.slice(-10).map((turn) => ({
         role: turn.role === 'assistant' ? 'assistant' : 'user',
-        content: String(turn.content || ''),
+        content: String(turn.content ?? ''),
       })) : []),
       { role: 'user', content: message },
     ];
@@ -127,7 +121,7 @@ module.exports = async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + apiKey,
+        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: 'openai/gpt-oss-120b',
@@ -145,12 +139,12 @@ module.exports = async (req, res) => {
     }
 
     const data = await response.json();
-    const reply = (data && data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content)
-      || "Sorry, I couldn't come up with an answer for that.";
+    const reply = data?.choices?.[0]?.message?.content
+      ?? "Sorry, I couldn't come up with an answer for that.";
 
     res.status(200).json({ reply });
   } catch (err) {
-    console.error('Chat function error:', err && err.stack ? err.stack : err);
+    console.error('Chat function error:', err);
     res.status(500).json({ error: 'Something went wrong.', detail: String(err) });
   }
-};
+}
