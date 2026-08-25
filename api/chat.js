@@ -2,6 +2,38 @@
 // Requires a GROQ_API_KEY environment variable set in Vercel project settings.
 // Get a free key at https://console.groq.com/keys
 
+// --- Rate limiting -----------------------------------------------------
+// Best-effort per-IP limiter to protect the shared Groq free-tier quota.
+// Serverless functions don't share memory across cold starts / regions,
+// so this Map only guards a single warm instance — it's not a substitute
+// for the per-session cap enforced in the browser (see App.tsx), but it
+// stops any single IP from hammering the endpoint while an instance is warm.
+const RATE_LIMIT_MAX = 10; // max requests
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // per 10 minutes
+const requestLog = new Map(); // ip -> array of request timestamps
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const timestamps = (requestLog.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  timestamps.push(now);
+  requestLog.set(ip, timestamps);
+
+  // Keep the map from growing unbounded on a long-lived warm instance.
+  if (requestLog.size > 500) {
+    for (const [key, times] of requestLog) {
+      if (times.every((t) => now - t >= RATE_LIMIT_WINDOW_MS)) requestLog.delete(key);
+    }
+  }
+
+  return timestamps.length > RATE_LIMIT_MAX;
+}
+
+function getClientIp(req) {
+  const forwarded = req.headers['x-forwarded-for'];
+  if (typeof forwarded === 'string' && forwarded.length > 0) return forwarded.split(',')[0].trim();
+  return req.socket?.remoteAddress ?? 'unknown';
+}
+
 const SYSTEM_CONTEXT = `
 You are the friendly portfolio assistant embedded on Tariq Ahmed's personal developer portfolio website.
 You represent Tariq and speak about him in first person on his behalf (e.g. "I work with React and Node.js...").
@@ -99,6 +131,12 @@ export default async function handler(req, res) {
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       res.status(500).json({ error: 'Server is missing GROQ_API_KEY.' });
+      return;
+    }
+
+    const clientIp = getClientIp(req);
+    if (isRateLimited(clientIp)) {
+      res.status(429).json({ error: "You've sent a lot of messages in a short time — please wait a bit before trying again." });
       return;
     }
 

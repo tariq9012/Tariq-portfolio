@@ -559,6 +559,22 @@ function RoutedErrorBoundary({ children }: { children: ReactNode }) {
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
 
+// Per-tab-session cap on how many messages a visitor can send. This is a
+// simple, no-backend way to protect the shared Groq free-tier quota — it
+// resets when the tab/session is closed. It's a soft, best-effort limit
+// (a determined visitor could reset it), paired with a real per-IP limit
+// on the server in api/chat.js.
+const SESSION_MESSAGE_LIMIT = 10;
+const SESSION_COUNT_KEY = 'tariq-chat-message-count';
+
+function getSessionCount(): number {
+  try {
+    return Number(sessionStorage.getItem(SESSION_COUNT_KEY) ?? '0');
+  } catch {
+    return 0;
+  }
+}
+
 function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -566,7 +582,9 @@ function ChatWidget() {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [sentCount, setSentCount] = useState(getSessionCount);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const limitReached = sentCount >= SESSION_MESSAGE_LIMIT;
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -574,11 +592,16 @@ function ChatWidget() {
 
   const send = async () => {
     const text = input.trim();
-    if (!text || loading) return;
+    if (!text || loading || limitReached) return;
     const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: text }];
     setMessages(nextMessages);
     setInput('');
     setLoading(true);
+
+    const nextCount = sentCount + 1;
+    setSentCount(nextCount);
+    try { sessionStorage.setItem(SESSION_COUNT_KEY, String(nextCount)); } catch { /* storage unavailable, ignore */ }
+
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -586,7 +609,11 @@ function ChatWidget() {
         body: JSON.stringify({ message: text, history: nextMessages.slice(0, -1) }),
       });
       const data = await response.json();
-      const reply = response.ok ? data.reply : "Sorry, I'm having trouble answering right now — please try again in a moment.";
+      const reply = response.status === 429
+        ? (data?.error ?? "You've reached the message limit for now — please try again a bit later.")
+        : response.ok
+          ? data.reply
+          : "Sorry, I'm having trouble answering right now — please try again in a moment.";
       setMessages((current) => [...current, { role: 'assistant', content: reply }]);
     } catch {
       setMessages((current) => [...current, { role: 'assistant', content: "Sorry, I'm having trouble connecting right now." }]);
@@ -610,7 +637,16 @@ function ChatWidget() {
               </div>
             ))}
             {loading && (
-              <div className="flex justify-start"><p className="rounded-xl bg-[hsl(var(--secondary))] px-3.5 py-2.5 text-sm text-[hsl(var(--muted-foreground))]">Typing…</p></div>
+              <div className="flex justify-start">
+                <div className="typing-bubble flex items-center gap-1.5 rounded-xl bg-[hsl(var(--secondary))] px-3.5 py-3">
+                  <span className="typing-dot h-1.5 w-1.5 rounded-full bg-[hsl(var(--muted-foreground))]" />
+                  <span className="typing-dot h-1.5 w-1.5 rounded-full bg-[hsl(var(--muted-foreground))]" />
+                  <span className="typing-dot h-1.5 w-1.5 rounded-full bg-[hsl(var(--muted-foreground))]" />
+                </div>
+              </div>
+            )}
+            {limitReached && !loading && (
+              <div className="flex justify-start"><p className="max-w-[85%] rounded-xl bg-[hsl(var(--secondary))] px-3.5 py-2.5 text-xs text-[hsl(var(--muted-foreground))]">You've reached the message limit for this session. Feel free to reach out directly via the Contact section or email instead.</p></div>
             )}
           </div>
           <div className="flex items-center gap-2 border-t border-[hsl(var(--border))] p-3">
@@ -619,10 +655,11 @@ function ChatWidget() {
               value={input}
               onChange={(event) => setInput(event.target.value)}
               onKeyDown={(event) => { if (event.key === 'Enter') send(); }}
-              placeholder="Ask a question…"
-              className="flex-1 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background))] px-4 py-2.5 text-sm outline-none focus:border-[hsl(var(--accent))]"
+              placeholder={limitReached ? 'Message limit reached' : 'Ask a question…'}
+              disabled={limitReached}
+              className="flex-1 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background))] px-4 py-2.5 text-sm outline-none focus:border-[hsl(var(--accent))] disabled:opacity-50"
             />
-            <button data-testid="button-send-chat" type="button" onClick={send} disabled={loading || !input.trim()} aria-label="Send message" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] transition-opacity disabled:opacity-40">
+            <button data-testid="button-send-chat" type="button" onClick={send} disabled={loading || !input.trim() || limitReached} aria-label="Send message" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] transition-opacity disabled:opacity-40">
               <Send size={15} />
             </button>
           </div>
