@@ -42,7 +42,7 @@ const socials = [
 ];
 
 const stats = [
-  { value: '02', label: 'Featured builds' },
+  { value: '04', label: 'Featured builds' },
   { value: '14', label: 'Technologies explored' },
   { value: '01', label: 'Developer mindset' },
   { value: '∞', label: 'Curiosity in progress' },
@@ -93,6 +93,19 @@ const projects: Project[] = [
     repoUrl: 'https://github.com/tariq9012/Cleaning-Website',
     images: ['/projects/cleaning-website/1.jpg', '/projects/cleaning-website/2.jpg', '/projects/cleaning-website/3.jpg'],
   },
+  {
+    id: 'luma-restaurant', name: 'Luma Restaurant', eyebrow: 'Restaurant / Full Stack',
+    description: 'A premium restaurant platform with menu browsing, reservations, online ordering, and an admin dashboard — built on a full React and PostgreSQL stack.',
+    overview: 'Luma Restaurant is a complete restaurant website product rather than just a landing page: public menu, reservation, and ordering pages sit alongside authenticated accounts, customer reviews, and an admin dashboard for running the business day to day.',
+    problem: 'Restaurant sites often stop at a nice-looking menu page, leaving reservations, orders, and reviews as afterthoughts handled by phone calls or disconnected third-party tools.',
+    solution: 'One connected system: a React and Tailwind frontend talks to an Express API backed by PostgreSQL, so reservations, orders, accounts, and reviews all live in the same place — with an admin dashboard to manage stats, orders, reservations, contact messages, menu items, and review moderation.',
+    features: ['Menu browsing with search, filtering, and sorting', 'Reservations and online ordering', 'Accounts with JWT-based sign in/out', 'Customer reviews with an admin approval workflow', 'Admin dashboard for orders, reservations, menu, and messages'],
+    challenges: 'Structuring a real monorepo around a typed API contract, so the frontend, API, and database schema all stay in sync as features kept growing.',
+    learned: 'Generating the frontend API client and validation schemas directly from an OpenAPI spec removed a whole category of frontend/backend mismatch bugs before they could ever happen.',
+    categories: ['Full Stack', 'React'], stack: ['React', 'Vite', 'Tailwind CSS', 'Express', 'PostgreSQL', 'Drizzle ORM'], tone: 'plum', number: '04',
+    repoUrl: 'https://github.com/tariq9012/Restaurant-website',
+    images: ['/projects/luma-restaurant/1.jpg', '/projects/luma-restaurant/2.jpg', '/projects/luma-restaurant/3.jpg', '/projects/luma-restaurant/4.jpg'],
+  },
 ];
 
 const timeline = [
@@ -110,6 +123,7 @@ const projectToneClasses: Record<Project['tone'], string> = {
   mint: 'bg-[#cce8db]',
   apricot: 'bg-[#f0d6c8]',
   blue: 'bg-[#d7e7ef]',
+  plum: 'bg-[#e2d6e8]',
 };
 
 function ScrollReveal({ children, className = '', delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
