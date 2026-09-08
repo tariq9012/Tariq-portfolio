@@ -105,6 +105,7 @@ const projects: Project[] = [
     learned: 'Generating the frontend API client and validation schemas directly from an OpenAPI spec removed a whole category of frontend/backend mismatch bugs before they could ever happen.',
     categories: ['Full Stack', 'React'], stack: ['React', 'Vite', 'Tailwind CSS', 'Express', 'PostgreSQL', 'Drizzle ORM'], tone: 'plum', number: '04',
     repoUrl: 'https://github.com/tariq9012/Restaurant-website',
+    liveUrl: 'https://restaurant-website-luma-restaurant.vercel.app/',
     images: ['/projects/luma-restaurant/1.jpg', '/projects/luma-restaurant/2.jpg', '/projects/luma-restaurant/3.jpg', '/projects/luma-restaurant/4.jpg'],
   },
   {
