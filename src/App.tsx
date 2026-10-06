@@ -43,7 +43,7 @@ const socials = [
 ];
 
 const stats = [
-  { value: '05', label: 'Featured builds' },
+  { value: '07', label: 'Featured builds' },
   { value: '14', label: 'Technologies explored' },
   { value: '01', label: 'Developer mindset' },
   { value: '∞', label: 'Curiosity in progress' },
@@ -66,7 +66,9 @@ const projects: Project[] = [
     features: ['Product discovery and category browsing', 'Cart and checkout flow foundations', 'Responsive product detail views', 'Database-ready inventory structure'],
     challenges: 'Balancing a rich catalog with a low-friction shopping path across smaller screens.',
     learned: 'The best commerce interfaces make the next useful action obvious without removing the sense of exploration.',
-    categories: ['Full Stack', 'JavaScript'], stack: ['HTML', 'CSS', 'JavaScript', 'Node.js / Express', 'MySQL'], tone: 'mint', number: '01',
+    categories: ['Full Stack', 'JavaScript'], stack: ['HTML', 'CSS', 'JavaScript', 'Node.js / Express', 'MongoDB'], tone: 'mint', number: '01',
+    repoUrl: 'https://github.com/tariq9012/shopinza-e-commerce-website',
+    liveUrl: 'https://shopinza-e-commerce-website.vercel.app/',
     images: ['/projects/shopinza/1.jpg', '/projects/shopinza/2.jpg', '/projects/shopinza/3.jpg', '/projects/shopinza/4.jpg'],
   },
   {
@@ -122,6 +124,32 @@ const projects: Project[] = [
     liveUrl: 'https://ironpulse-gym-pi.vercel.app',
     images: ['/projects/ironpulse-gym/1.jpg', '/projects/ironpulse-gym/2.jpg', '/projects/ironpulse-gym/3.jpg', '/projects/ironpulse-gym/4.jpg', '/projects/ironpulse-gym/5.jpg'],
   },
+  {
+    id: 'bizlinko', name: 'BizLinko', eyebrow: 'Jobs / Full Stack',
+    description: 'A full-stack job marketplace connecting job seekers and employers, with authenticated dashboards for both sides and an admin area.',
+    overview: 'BizLinko lets job seekers discover and apply to roles while employers post jobs, manage applications, and build out a company profile — a server-rendered React application with role-based dashboards rather than a static job board.',
+    problem: 'Job boards often treat seekers and employers as an afterthought on top of a listing page, leaving applications, company profiles, and admin oversight scattered across disconnected tools.',
+    solution: 'A single TanStack Start application backed by Supabase: job search and company directories for visitors, dedicated dashboards for job seekers (applications, saved jobs, profile) and employers (job posting, application management, company settings), and an admin area — all secured with Postgres Row Level Security rather than trusting the frontend alone.',
+    features: ['Job search and listings with category browsing', 'Company profiles and directory', 'Job seeker dashboard: applications, saved jobs, profile', 'Employer dashboard: post jobs, manage applications, company settings', 'Admin area and career resources section'],
+    challenges: 'Getting authorization right at the database layer — Postgres Row Level Security policies had to mirror the app\u2019s job-seeker/employer/admin roles exactly, since RLS is the real security boundary, not the UI.',
+    learned: 'File-based routing and server functions in TanStack Start made it straightforward to keep data loading colocated with the routes that need it, instead of juggling a separate API layer for simple reads.',
+    categories: ['Full Stack', 'React'], stack: ['React', 'TanStack Start', 'Tailwind CSS', 'Supabase', 'PostgreSQL'], tone: 'sand', number: '06',
+    repoUrl: 'https://github.com/tariq9012/BizLinko-Website',
+    liveUrl: 'https://biz-linko-website.vercel.app/',
+  },
+  {
+    id: 'estatehub', name: 'EstateHub', eyebrow: 'Real Estate / Full Stack',
+    description: 'A real-estate marketplace with separate Buyer, Agent, and Admin roles, backed by a React frontend and an Express + PostgreSQL API.',
+    overview: 'EstateHub is a three-sided real-estate platform: buyers browse and compare properties, agents manage listings and respond to inquiries, and admins moderate the whole marketplace — with every role boundary enforced on the server, not just hidden in the UI.',
+    problem: 'Real-estate sites usually serve one audience well (buyers) and leave agents and moderation as an afterthought, so listings go stale and there is no real oversight of who can do what.',
+    solution: 'A React single-page frontend talking to an Express API on PostgreSQL (Neon), with authentication and authorization middleware checked on every protected route: buyers get search, favorites, comparisons, and messaging; agents get listing management, inquiries, and license verification; admins get moderation, user management, and an audit log.',
+    features: ['Property browsing, search, favorites, and comparison for buyers', 'Messaging, inquiries, and appointment requests between buyers and agents', 'Agent listing management plus license verification and renewal', 'Admin moderation, user management, and audit log', 'JWT access + refresh token authentication with HTTP-only cookies'],
+    challenges: 'Designing a 29-table PostgreSQL schema that could cleanly support three different roles and their workflows, then shipping migrations and a seed/verify pipeline so the database state is never a guess.',
+    learned: 'Enforcing `authenticate` + `authorize(role)` middleware on every protected route \u2014 not just the sensitive ones \u2014 removed an entire class of "forgot to check the role" bugs before they could happen.',
+    categories: ['Full Stack', 'React'], stack: ['React', 'Express', 'PostgreSQL', 'JWT', 'Node.js'], tone: 'sky', number: '07',
+    repoUrl: 'https://github.com/tariq9012/EstateHub-Website',
+    liveUrl: 'https://estatehub-website-five.vercel.app/',
+  },
 ];
 
 const timeline = [
@@ -141,6 +169,8 @@ const projectToneClasses: Record<Project['tone'], string> = {
   blue: 'bg-[#d7e7ef]',
   plum: 'bg-[#e2d6e8]',
   ember: 'bg-[#f3d2b8]',
+  sand: 'bg-[#ead9bd]',
+  sky: 'bg-[#cfe3f2]',
 };
 
 function ScrollReveal({ children, className = '', delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
