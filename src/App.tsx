@@ -43,7 +43,7 @@ const socials = [
 ];
 
 const stats = [
-  { value: '07', label: 'Featured builds' },
+  { value: '10', label: 'Featured builds' },
   { value: '14', label: 'Technologies explored' },
   { value: '01', label: 'Developer mindset' },
   { value: '∞', label: 'Curiosity in progress' },
@@ -150,6 +150,45 @@ const projects: Project[] = [
     repoUrl: 'https://github.com/tariq9012/EstateHub-Website',
     liveUrl: 'https://estatehub-website-five.vercel.app/',
   },
+  {
+    id: 'medix-hospital', name: 'Medix', eyebrow: 'Healthcare / Full Stack',
+    description: 'A full-stack healthcare platform where patients find doctors and hospitals, book appointments, and manage records — with dedicated portals for doctors, hospital admins, and platform admins.',
+    overview: 'Medix is a feature-complete healthcare platform: patients search a public provider directory, book appointments, and manage medical records, prescriptions, documents, and payments, while doctors, hospital administrators, and platform admins each work from their own portal.',
+    problem: 'Booking a doctor and managing everything around it is usually split across a phone call, a clinic\u2019s own portal, and physical paperwork, with no single role-aware system tying patients, doctors, and hospital staff together.',
+    solution: 'One TanStack Start application on PostgreSQL via Drizzle ORM, with role-based access control throughout: a public provider directory with reviews and favorites for patients, appointment booking and medical-record management, realtime messaging and notifications over SSE, and separate doctor, hospital, and admin portals for everything behind the scenes.',
+    features: ['Public doctor/hospital directory with reviews and favorites', 'Appointment booking, medical records, prescriptions, and documents', 'Realtime messaging and notifications over SSE', 'Separate doctor, hospital admin, and platform admin portals', 'Billing and role-based access control enforced throughout'],
+    challenges: 'Keeping a healthcare data model honest under real constraints \u2014 private medical documents had to live outside the web root, and every role needed its own enforced boundary rather than a shared one.',
+    learned: 'Building the project in phases with a verification script after each one (auth, booking, records, billing...) caught regressions immediately instead of letting them pile up silently.',
+    categories: ['Full Stack', 'React'], stack: ['React', 'TanStack Start', 'Drizzle ORM', 'PostgreSQL', 'TypeScript', 'Tailwind CSS'], tone: 'teal', number: '08',
+    repoUrl: 'https://github.com/tariq9012/Medix-Hospitals-Website',
+    liveUrl: 'https://medix-hospitals-website.vercel.app/',
+  },
+  {
+    id: 'learnora', name: 'Learnora', eyebrow: 'Education / LMS',
+    description: 'A modern learning-management platform with Student, Instructor, and Admin roles — course management, media storage, and a premium, original design system.',
+    overview: 'Learnora is an LMS in the spirit of Udemy or Coursera but with its own visual identity: students browse and take courses, instructors build out course content, and admins oversee the whole platform, backed by a real PostgreSQL database rather than mock data.',
+    problem: 'Most learning platforms either stay a content catalog with no real structure, or bolt courses onto a generic CMS that was never designed for lessons, quizzes, and progress in the first place.',
+    solution: 'A React frontend backed by Prisma ORM on PostgreSQL, with authentication, course and lesson management, and media storage built in, so the frontend was never left running on mock data for long.',
+    features: ['Student, Instructor, and Admin roles', 'Course and lesson management with media storage', 'Authentication with hashed credentials', 'Phase-by-phase verification scripts to confirm each milestone actually works', 'A clean, original design system built for a premium LMS feel'],
+    challenges: 'Migrating the project from a frontend-only, mock-data foundation to a real Prisma/PostgreSQL backend without breaking the UI that was already built against the mock shape.',
+    learned: 'Writing a verification script for each development phase turned "I think this works" into "this script confirms it works," which made it safe to keep building on top of earlier phases.',
+    categories: ['Full Stack', 'React'], stack: ['React', 'Prisma', 'PostgreSQL', 'TypeScript', 'Tailwind CSS'], tone: 'lilac', number: '09',
+    repoUrl: 'https://github.com/tariq9012/LEARNORA-Website',
+    liveUrl: 'https://learnora-website.vercel.app/',
+  },
+  {
+    id: 'shop-management-system', name: 'Shop Manager', eyebrow: 'Retail / POS System',
+    description: 'A complete retail management system — point of sale, inventory, suppliers, customer CRM, and reporting — with role-based access for admins and staff.',
+    overview: 'Shop Manager is a real, multi-feature shop management app: a barcode-ready point-of-sale screen, inventory and supplier management, a customer CRM with loyalty points, purchase orders, returns/refunds, and a dashboard with live charts and an activity audit trail.',
+    problem: 'Small shops often juggle a separate POS app, a spreadsheet for inventory, and no real record of who changed what, so stock counts drift and there is no single source of truth.',
+    solution: 'One Express and PostgreSQL (Neon) backend behind a focused HTML/CSS/JS frontend: every sale, return, and purchase order runs as an atomic database transaction that updates stock and logs the change, with admin and staff roles controlling who can do what.',
+    features: ['Barcode-ready point of sale with cart-based checkout', 'Inventory with low-stock alerts and CSV/Excel bulk import', 'Customer CRM with automatic loyalty points', 'Purchase orders, returns/refunds, and a full stock audit trail', 'Dashboard with revenue charts and a live activity feed'],
+    challenges: 'Keeping every stock-affecting action \u2014 sales, refunds, purchase-order receiving \u2014 as a single atomic transaction, so a crash mid-checkout could never leave stock counts half-updated.',
+    learned: 'A shop\u2019s real source of truth is the stock-movement audit trail, not the current stock number on a product \u2014 logging every change made the data far easier to trust.',
+    categories: ['Full Stack', 'JavaScript'], stack: ['HTML', 'CSS', 'JavaScript', 'Node.js / Express', 'PostgreSQL'], tone: 'coral', number: '10',
+    repoUrl: 'https://github.com/tariq9012/Shop-Management-System',
+    liveUrl: 'https://shop-management-system-frontend.vercel.app/',
+  },
 ];
 
 const timeline = [
@@ -171,6 +210,9 @@ const projectToneClasses: Record<Project['tone'], string> = {
   ember: 'bg-[#f3d2b8]',
   sand: 'bg-[#ead9bd]',
   sky: 'bg-[#cfe3f2]',
+  teal: 'bg-[#cde7e2]',
+  lilac: 'bg-[#ddd6ef]',
+  coral: 'bg-[#f3d6d2]',
 };
 
 function ScrollReveal({ children, className = '', delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
