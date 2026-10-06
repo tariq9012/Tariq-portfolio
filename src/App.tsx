@@ -50,7 +50,7 @@ const stats = [
 ];
 
 const skillGroups = [
-  { title: 'Frontend', detail: 'Interfaces with intent', icon: Monitor, skills: ['HTML', 'CSS', 'JavaScript', 'Bootstrap', 'React'] },
+  { title: 'Frontend', detail: 'Interfaces with intent', icon: Monitor, skills: ['HTML', 'CSS', 'JavaScript', 'Bootstrap', 'React','Tailwind','TypeScript'] },
   { title: 'Backend', detail: 'Systems that stay clear', icon: Server, skills: ['Node.js', 'Express.js', 'Python', 'Django'] },
   { title: 'Data', detail: 'Reliable foundations', icon: Database, skills: ['MySQL', 'SQL', 'Schema design', 'MongoDB'] },
   { title: 'Workflow', detail: 'Tools for better shipping', icon: Terminal, skills: ['Git', 'GitHub', 'VS Code', 'REST APIs'] },
