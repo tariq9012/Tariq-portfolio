@@ -43,7 +43,7 @@ const socials = [
 ];
 
 const stats = [
-  { value: '10', label: 'Featured builds' },
+  { value: '12', label: 'Featured builds' },
   { value: '14', label: 'Technologies explored' },
   { value: '01', label: 'Developer mindset' },
   { value: '∞', label: 'Curiosity in progress' },
@@ -52,7 +52,7 @@ const stats = [
 const skillGroups = [
   { title: 'Frontend', detail: 'Interfaces with intent', icon: Monitor, skills: ['HTML', 'CSS', 'JavaScript', 'Bootstrap', 'React', 'Tailwind'] },
   { title: 'Backend', detail: 'Systems that stay clear', icon: Server, skills: ['Node.js', 'Express.js', 'Python', 'Django'] },
-  { title: 'Data', detail: 'Reliable foundations', icon: Database, skills: ['MySQL', 'PostgreSQL', 'Schema design', 'MongoDB','Neon'] },
+  { title: 'Data', detail: 'Reliable foundations', icon: Database, skills: ['MySQL', 'PostgreSQL', 'Schema design', 'MongoDB','Neon', 'Supabase'] },
   { title: 'Workflow', detail: 'Tools for better shipping', icon: Terminal, skills: ['Git', 'GitHub', 'VS Code', 'REST APIs'] },
 ];
 
@@ -189,6 +189,30 @@ const projects: Project[] = [
     repoUrl: 'https://github.com/tariq9012/Shop-Management-System',
     liveUrl: 'https://shop-management-system-frontend.vercel.app/',
   },
+  {
+    id: 'pixora-ai', name: 'Pixora AI', eyebrow: 'AI SaaS / Full Stack',
+    description: 'An AI image-generation SaaS \u2014 real AI generation via Replicate, Stripe-powered credits, and a premium creative-studio interface.',
+    overview: 'Pixora AI is a premium, dark-themed SaaS for generating, editing, and remixing images with AI. What started as a frontend-only UI foundation grew into a real product: actual AI image generation through the Replicate API, Stripe-powered credit purchases, and generated images stored in S3-compatible object storage.',
+    problem: 'Many AI-image tools either stay a thin wrapper around a single model with no real product around it, or they over-promise a premium SaaS feel while actually running on mock data and fake credit balances.',
+    solution: 'A TanStack Start application on PostgreSQL via Drizzle ORM, with real AI generation requests sent to Replicate, a credit system backed by Stripe payments, and generated assets stored in S3-compatible storage rather than the database.',
+    features: ['Real AI image generation via the Replicate API', 'Credit-based usage backed by Stripe payments', 'Generated image library with S3-compatible storage', 'Custom auth with hashed credentials', 'Premium, dark creative-SaaS interface built from scratch'],
+    challenges: 'Starting from a deliberately mock-data-only Phase 1 UI and wiring in a real AI provider, real payments, and real storage afterward, without the premium interface ending up fighting the real data underneath it.',
+    learned: 'Designing the credit and generation flow around what a real AI provider actually returns \u2014 timing, failures, async jobs \u2014 instead of an idealized instant mock, made the eventual Replicate integration far smoother.',
+    categories: ['Full Stack', 'React'], stack: ['React', 'TanStack Start', 'Drizzle ORM', 'PostgreSQL', 'Replicate API', 'Stripe', 'Tailwind CSS'], tone: 'indigo', number: '11',
+    repoUrl: 'https://github.com/tariq9012/Pixora-AI-Image-Generate-Website',
+  },
+  {
+    id: 'nova-university', name: 'Nova University', eyebrow: 'Education / Full Stack',
+    description: 'A full university platform \u2014 academic catalog, admissions, and authenticated student, faculty, and admin portals \u2014 on Next.js and PostgreSQL.',
+    overview: 'Nova University models a real university\u2019s public site and internal systems together: a database-backed academic catalog (schools, departments, programs, courses, faculty), a full admissions section, and authenticated portals for students, faculty, and admins, built in phases on Next.js and Neon PostgreSQL.',
+    problem: 'University websites often separate the public-facing catalog from the systems staff and students actually use, so program data, admissions info, and student records live in disconnected tools that drift out of sync.',
+    solution: 'One Next.js application with a shared PostgreSQL schema via Drizzle ORM underneath everything: public academic search, program comparison, and admissions pages read from the same database that powers authenticated student academic services and the faculty teaching workspace, with a CMS for news, events, and announcements layered on top.',
+    features: ['Academic catalog \u2014 schools, departments, programs, courses, faculty \u2014 with search, filters, and pagination', 'Program comparison (up to three) plus detailed admissions requirements, deadlines, fees, and scholarships', 'Authenticated student, faculty, and admin portals with role-based access', 'CMS-driven news, events, and announcements with publishing controls', 'Automated integration test suites covering academics, auth, and each portal'],
+    challenges: 'Building out five phases of a real university system \u2014 public catalog, admissions, authentication, student services, faculty workspace \u2014 while keeping every earlier phase working and tested the whole way through.',
+    learned: 'Writing an integration-test suite per phase (academics, auth, student, faculty) turned "did I break something" from a guess into a command that could actually be run before shipping the next phase.',
+    categories: ['Full Stack', 'React'], stack: ['Next.js', 'React', 'Drizzle ORM', 'PostgreSQL', 'TypeScript', 'Tailwind CSS'], tone: 'slate', number: '12',
+    repoUrl: 'https://github.com/tariq9012/Nova-University-Website',
+  },
 ];
 
 const timeline = [
@@ -213,6 +237,8 @@ const projectToneClasses: Record<Project['tone'], string> = {
   teal: 'bg-[#cde7e2]',
   lilac: 'bg-[#ddd6ef]',
   coral: 'bg-[#f3d6d2]',
+  indigo: 'bg-[#d6dbf5]',
+  slate: 'bg-[#d7dde3]',
 };
 
 function ScrollReveal({ children, className = '', delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
