@@ -50,7 +50,7 @@ const stats = [
 ];
 
 const skillGroups = [
-  { title: 'Frontend', detail: 'Interfaces with intent', icon: Monitor, skills: ['HTML', 'CSS', 'JavaScript', 'Bootstrap', 'React','Tailwind'] },
+  { title: 'Frontend', detail: 'Interfaces with intent', icon: Monitor, skills: ['HTML', 'CSS', 'JavaScript', 'Bootstrap', 'React', 'Tailwind'] },
   { title: 'Backend', detail: 'Systems that stay clear', icon: Server, skills: ['Node.js', 'Express.js', 'Python', 'Django'] },
   { title: 'Data', detail: 'Reliable foundations', icon: Database, skills: ['MySQL', 'PostgreSQL', 'Schema design', 'MongoDB', 'Neon'] },
   { title: 'Workflow', detail: 'Tools for better shipping', icon: Terminal, skills: ['Git', 'GitHub', 'VS Code', 'REST APIs'] },
@@ -367,16 +367,12 @@ function WorkspaceVisual() {
     <div className="workspace-float relative mx-auto h-[390px] w-full max-w-[470px]" aria-label="Tariq Ahmed profile photo" role="img">
       <div className="absolute inset-0 rounded-[2rem] bg-[hsl(var(--primary))] shadow-[20px_25px_70px_hsl(var(--primary)/.18)]" />
       <div className="absolute -right-3 top-9 h-28 w-28 rounded-full border border-[hsl(var(--accent)/.55)] sm:-right-8" />
-      <div className="absolute -left-3 bottom-7 h-16 w-16 rounded-full bg-[hsl(var(--accent)/.9)] sm:-left-8" />
       <div className="absolute left-6 right-6 top-6 bottom-6 overflow-hidden rounded-xl border border-white/15 shadow-2xl sm:left-9 sm:right-9">
         <img
           src="/profile.jpg"
           alt="Tariq Ahmed"
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover object-top"
         />
-      </div>
-      <div className="absolute bottom-6 right-8 rounded-lg border border-white/15 bg-white/10 px-3 py-2 backdrop-blur-sm sm:right-14">
-        <span className="font-mono-ui text-[9px] text-[#9fe0c9]">status: shipping</span>
       </div>
     </div>
   );
@@ -407,10 +403,6 @@ function Hero() {
         <div className="reveal reveal-delay-2 relative">
           <div className="absolute -left-4 top-12 hidden -rotate-90 font-mono-ui text-[9px] uppercase tracking-[.25em] text-[hsl(var(--muted-foreground))] lg:block">Selected / workspace</div>
           <WorkspaceVisual />
-          <div className="absolute bottom-3 left-1 rounded-lg border border-[hsl(var(--border))] bg-[hsl(var(--card)/.9)] px-4 py-3 shadow-xl backdrop-blur sm:left-4">
-            <p className="font-mono-ui text-[9px] uppercase tracking-[.09em] text-[hsl(var(--muted-foreground))]">Current focus</p>
-            <p className="mt-1 font-display text-sm font-semibold">Useful by default.</p>
-          </div>
         </div>
       </div>
       <div className="container-wide mt-20 flex items-center gap-3 border-t border-[hsl(var(--border))] pt-5 font-mono-ui text-[9px] uppercase tracking-[.1em] text-[hsl(var(--muted-foreground))]"><ArrowDownRight size={15} className="text-[hsl(var(--accent))]" /> Scroll to explore <span className="ml-auto hidden sm:block">01 — 08 / portfolio index</span></div>
