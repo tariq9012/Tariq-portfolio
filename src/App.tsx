@@ -52,7 +52,7 @@ const stats = [
 const skillGroups = [
   { title: 'Frontend', detail: 'Interfaces with intent', icon: Monitor, skills: ['HTML', 'CSS', 'JavaScript', 'Bootstrap', 'React', 'Tailwind'] },
   { title: 'Backend', detail: 'Systems that stay clear', icon: Server, skills: ['Node.js', 'Express.js', 'Python', 'Django'] },
-  { title: 'Data', detail: 'Reliable foundations', icon: Database, skills: ['MySQL', 'PostgreSQL', 'Schema design', 'MongoDB', 'Neon'] },
+  { title: 'Data', detail: 'Reliable foundations', icon: Database, skills: ['MySQL', 'PostgreSQL', 'Schema design', 'MongoDB','Neon'] },
   { title: 'Workflow', detail: 'Tools for better shipping', icon: Terminal, skills: ['Git', 'GitHub', 'VS Code', 'REST APIs'] },
 ];
 
@@ -192,7 +192,7 @@ const projects: Project[] = [
 ];
 
 const timeline = [
-  { type: 'Internship', date: 'Editable date', title: 'Internship detail to be added', copy: 'A clear place for an internship, practical placement, or supervised experience.', icon: BriefcaseBusiness },
+  { type: 'Internship', date: 'Aug 2026 \u2013 Sep 2026', title: 'Full Stack Web Development Intern \u2014 CodeAlpha', copy: 'Remote internship building two full-stack projects end to end \u2014 Shopinza, a MongoDB-backed e-commerce site, and Zovari, a social platform concept \u2014 covering frontend, backend, and deployment.', icon: BriefcaseBusiness },
   { type: 'Freelance', date: 'Editable date', title: 'Freelance experience to be added', copy: 'Add a project, client engagement, or independent work story here when ready.', icon: Globe2 },
 ];
 
@@ -542,7 +542,7 @@ function Experience() {
     <section id="experience" className="py-24 sm:py-32">
       <ScrollReveal className="container-wide grid gap-14 lg:grid-cols-[.8fr_1.2fr] lg:gap-24">
         <SectionHeading kicker="05 / Path so far" title="The timeline is still being written." copy="No invented titles or credentials here. Just clear, editable places for the work and learning that matter." />
-        <div className="relative border-l border-[hsl(var(--border))] pl-7 sm:pl-10">{timeline.map(({ type, date, title, copy, icon: Icon }, index) => <article key={type} className="relative pb-12 last:pb-0"><span className="absolute -left-[42px] grid h-8 w-8 place-items-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-[hsl(var(--accent))] sm:-left-[58px]"><Icon size={14} /></span><div className="flex flex-wrap items-center gap-3"><span className="font-mono-ui text-[10px] uppercase tracking-[.1em] text-[hsl(var(--accent))]">{type}</span><span className="h-px w-5 bg-[hsl(var(--border))]" /><span className="font-mono-ui text-[10px] text-[hsl(var(--muted-foreground))]">{date}</span></div><h3 className="mt-4 font-display text-xl font-semibold tracking-[-.03em]">{title}</h3><p className="mt-2 max-w-lg text-sm leading-7 text-[hsl(var(--muted-foreground))]">{copy}</p>{index === 0 && <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-[hsl(var(--secondary))] px-3 py-1.5 font-mono-ui text-[9px] text-[hsl(var(--muted-foreground))]"><Sparkles size={12} className="text-[hsl(var(--accent))]" /> Open to adding the next chapter</span>}</article>)}</div>
+        <div className="relative border-l border-[hsl(var(--border))] pl-7 sm:pl-10">{timeline.map(({ type, date, title, copy, icon: Icon }, index) => <article key={type} className="relative pb-12 last:pb-0"><span className="absolute -left-[42px] grid h-8 w-8 place-items-center rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--background))] text-[hsl(var(--accent))] sm:-left-[58px]"><Icon size={14} /></span><div className="flex flex-wrap items-center gap-3"><span className="font-mono-ui text-[10px] uppercase tracking-[.1em] text-[hsl(var(--accent))]">{type}</span><span className="h-px w-5 bg-[hsl(var(--border))]" /><span className="font-mono-ui text-[10px] text-[hsl(var(--muted-foreground))]">{date}</span></div><h3 className="mt-4 font-display text-xl font-semibold tracking-[-.03em]">{title}</h3><p className="mt-2 max-w-lg text-sm leading-7 text-[hsl(var(--muted-foreground))]">{copy}</p>{index === timeline.length - 1 && <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-[hsl(var(--secondary))] px-3 py-1.5 font-mono-ui text-[9px] text-[hsl(var(--muted-foreground))]"><Sparkles size={12} className="text-[hsl(var(--accent))]" /> Open to adding the next chapter</span>}</article>)}</div>
         <Education />
       </ScrollReveal>
     </section>
