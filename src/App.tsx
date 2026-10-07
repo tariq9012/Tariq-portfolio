@@ -52,7 +52,7 @@ const stats = [
 const skillGroups = [
   { title: 'Frontend', detail: 'Interfaces with intent', icon: Monitor, skills: ['HTML', 'CSS', 'JavaScript', 'Bootstrap', 'React', 'Tailwind'] },
   { title: 'Backend', detail: 'Systems that stay clear', icon: Server, skills: ['Node.js', 'Express.js', 'Python', 'Django'] },
-  { title: 'Data', detail: 'Reliable foundations', icon: Database, skills: ['MySQL', 'PostgreSQL', 'Schema design', 'MongoDB','Neon', 'Supabase'] },
+  { title: 'Data', detail: 'Reliable foundations', icon: Database, skills: ['MySQL', 'PostgreSQL', 'Schema design', 'MongoDB', 'Supabase'] },
   { title: 'Workflow', detail: 'Tools for better shipping', icon: Terminal, skills: ['Git', 'GitHub', 'VS Code', 'REST APIs'] },
 ];
 
@@ -256,7 +256,7 @@ function ScrollReveal({ children, className = '', delay = 0 }: { children: React
           }
         });
       },
-      { threshold: 0.15, rootMargin: '0px 0px -60px 0px' },
+      { threshold: 0, rootMargin: '0px 0px -60px 0px' },
     );
     observer.observe(node);
     return () => observer.disconnect();
